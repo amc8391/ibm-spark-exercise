@@ -1,0 +1,16 @@
+Initially looking at this problem I can see that scale is going to be a big factor in this; brute force rearranging and comparing these strings seems wildly inefficient
+The dictionary of words provided is 370,000+ lines long so iterating through those is out of the question
+From looking at Spark, it seems there's a provided graph library which could be used to group all words with the same letters in the frequency dictionary
+
+
+1) Read in the freq_dict.json file to Spark's memory (extract)
+2) Group words with the same anagram (transform)
+3) Make this accessible to queries (load)
+
+Getting the final sentence in each puzzle should be the real challenge; I haven't quite figured out how I'll tackle that yet
+
+Some references I've been looking at
+https://www.youtube.com/watch?v=1L6wp7AxfPE
+https://www.youtube.com/watch?v=FaoEl7Q4GBk&list=PLf0swTFhTI8o2V96xr0ayFWKfFJ2PvxHM&index=4
+https://github.com/AlexIoannides/pyspark-example-project/blob/master/etl_job.py
+https://spark.apache.org/examples.html
