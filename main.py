@@ -1,11 +1,12 @@
 from pyspark.sql import SparkSession, Row
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
-import pandas as pd
 import json
+import itertools
+
 from models import Puzzle
 
-FILE_NAME = 'small_dict'
+FREQ_DICT_FILENAME = 'freq_dict'
 PUZZLE_PATHS = [
     'inputs/puzzle1.json',
     'inputs/puzzle2.json',
@@ -24,7 +25,7 @@ def start_spark():
 
 def extract_freq_table(spark):
     # input_path = 'inputs/small_dict.json'
-    input_path = 'inputs/{}.json'.format(file_name)
+    input_path = 'inputs/{}.json'.format(FREQ_DICT_FILENAME)
     with open(input_path, 'rb') as f:
         freq_dict = json.load(f)
 
@@ -71,12 +72,12 @@ def transform_freq_table(df):
 
 def load_data(df):
     pass
-    # df.write.parquet('output/{}.parquet'.format(file_name))
+    # df.write.parquet('output/{}.parquet'.format(FREQ_DICT_FILENAME))
 
 
 def load_puzzles():
     puzzles = []
-    for path in puzzle_paths:
+    for path in PUZZLE_PATHS:
         with open(path, 'r') as f:
             puzzle_dict = json.load(f)
             new_puzzle = Puzzle()
@@ -85,6 +86,46 @@ def load_puzzles():
             new_puzzle.sentence_word_lengths = puzzle_dict['sentence_word_lengths']
             puzzles.append(new_puzzle)
     return puzzles
+
+
+def solve_puzzle(puzzle, freq_df):
+    # Solve each anagram
+    anagram_words = []
+    best_fits = []
+    for anagram in puzzle.input_anagrams:
+        valid_words = freq_df.where(freq_df.sorted_word == __sort_string(anagram)).collect()
+        max_freq = 0
+        best_fit = ''
+        for word in valid_words:
+            if word.frequency >= max_freq:
+                max_freq = word.frequency
+                best_fit = word
+        best_fits.append(best_fit)
+        anagram_words.append(valid_words)
+    puzzle.anagram_solutions = best_fits
+
+    # Solve the end sentence (if possible)
+    sentence_chars = puzzle.get_sentence_characters()
+    possible_sentences = []
+    for perm in itertools.permutations(sentence_chars):
+        word_start_index = 0
+        sentence_words = []
+        sentence_valid = True
+        for word_length in puzzle.sentence_word_lengths:
+            word_end_index = word_start_index + word_length - 1
+            sentence_word = ''.join(perm[word_start_index: word_end_index])
+            if freq_df.where(freq_df.word == sentence_word).count():
+                sentence_words.append(freq_df.where(freq_df.word == sentence_word).collect())
+            else:
+                sentence_valid = False
+                break
+            word_start_index = word_end_index
+        if sentence_valid:
+            possible_sentences.append(sentence_words)
+
+    # Restart if end sentence is incorrect
+    pass
+
 
 def main():
     # Init the spark session
@@ -97,6 +138,8 @@ def main():
 
     # Load in the puzzles
     puzzles = load_puzzles()
+    for puzzle in puzzles:
+        solve_puzzle(puzzle, df_transformed)
     pass
 
 
