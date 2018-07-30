@@ -1,5 +1,9 @@
 class Puzzle:
+    """
+    Represents a word jumble puzzle with multiple anagrams that give hints to a final jumbled sentence
+    """
     def __init__(self):
+        self.puzzle_name = ''
         self.input_anagrams = []
         self.sentence_indices = []
         self.sentence_word_lengths = []

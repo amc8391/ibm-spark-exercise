@@ -1,0 +1,22 @@
+{
+  "puzzle_name": "puzzle5",
+  "input_anagrams": [
+    "gyrint",
+    "drivet",
+    "snamea",
+    "ceedit",
+    "sowdah",
+    "elchek"
+  ],
+  "sentence_indices": [
+    [0, 1, 3],
+    [2, 5],
+    [0, 5],
+    [1, 3, 5],
+    [0, 3],
+    [1, 5]
+  ],
+  "sentence_word_lengths": [
+    6, 8
+  ]
+}
