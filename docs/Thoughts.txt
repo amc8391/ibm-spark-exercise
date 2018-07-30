@@ -14,3 +14,4 @@ https://www.youtube.com/watch?v=1L6wp7AxfPE
 https://www.youtube.com/watch?v=FaoEl7Q4GBk&list=PLf0swTFhTI8o2V96xr0ayFWKfFJ2PvxHM&index=4
 https://github.com/AlexIoannides/pyspark-example-project/blob/master/etl_job.py
 https://spark.apache.org/examples.html
+Anagram trees - http://blog.notdot.net/2007/10/Damn-Cool-Algorithms-Part-3-Anagram-Trees

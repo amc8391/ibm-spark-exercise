@@ -144,7 +144,7 @@ def determine_best_sentence(possible_sentences):
     best_sentence = []
     best_sentence_score = -999
     for sentence in possible_sentences:
-        sentence_score = sum([word.frequency for word in sentence])
+        sentence_score = sum(word.frequency for word in sentence)
         if sentence_score > best_sentence_score:
             best_sentence_score = sentence_score
             best_sentence = sentence
